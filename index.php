@@ -5,42 +5,36 @@
  * @since Kimmia 1.0
  */
  
-get_header(); 
-if(((is_home() && !is_front_page()) || is_category()|| is_tag() || is_date()) && (intval(get_option('page_for_posts')) > 0) ) {
-	//when you use custom page for blog will use the page layout
-	$layout = penguin_get_page_layout(get_option('page_for_posts'));
-	$sidebar_name = get_post_meta(get_option('page_for_posts'), 'sidebar-type', true);
-	if($sidebar_name == ""){$sidebar_name = '0';}
-}else{
-	// index default will use global layout 
-	$layout = penguin_get_page_layout('global'); 
-	$sidebar_name = '0';
-}
-?>
+get_header(); ?>
 
 <section class="site-content">
-    <div class="container">
-        <div class="row-fluid">
-        	<?php if($layout == 2) { ?> 
-                <div class="span4"><?php generated_dynamic_sidebar($sidebar_name); ?></div>
-            <?php } ?>
-        	<div class="<?php echo $layout == 1 ? 'span12' : 'span8'; ?>">
-				<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-                    <?php get_template_part( 'content', get_post_format() );?>
-                <?php 
-					endwhile; 
-					penguin_content_pagination('nav-bottom' , 'pagination-centered');
-				else: ?>
-                <article id="post-0" <?php post_class();?> >
-                    <p><?php _e('Sorry, this page does not exist.' , 'kimmia' ); ?></p>
-                </article>
-                <?php endif; ?>
-    		</div>
-            <?php if($layout == 3) { ?> 
-                <div class="span4"><?php generated_dynamic_sidebar($sidebar_name); ?></div>
-            <?php } ?>
-        </div>
-    </div>
+    <main id="main" class="m-all t-2of3 d-5of7 cf" role="main" itemscope itemprop="mainContentOfPage" itemtype="http://schema.org/Blog">
+
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+
+<article id="post-<?php the_ID(); ?>" role="article">
+
+<header class="article-header">
+<h1 class="h2 entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
+</header>
+
+<section class="entry-content cf">
+<?php the_content(); ?>
 </section>
+
+</article>
+
+<?php endwhile; ?>
+
+<?php endif; ?>
+
+
+</main>
+</section>
+
+</div><!-- /container -->
+
+<script src="<?php echo THEME_DIR; ?>/js/classie.js"></script>
+<script src="<?php echo THEME_DIR; ?>/js/main4.js"></script>
 
 <?php get_footer(); ?>
